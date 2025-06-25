@@ -15,14 +15,14 @@ namespace NSE {
      * 2 flavors of tempurture sensor
      */
     export enum TempSensor {
-        //% block="LM36"
-        LM36,
+        //% block="LM35"
+        LM35,
         //% block="KS0033"
         KS0033
     }
 
     /**
-     * This should be placed in the start up section
+     * gets the temperure from a set of supported temperture sensors
      */
     //% block="get temperture(°F) from $sensorName on pin $pin"
     //% weight=90
@@ -33,18 +33,25 @@ namespace NSE {
         let celsius = 0
 
         switch (sensorName) {
-            case TempSensor.LM36:
+            case TempSensor.LM35:
                 //LM36: 10mV/°C with 500mV offset at 0°C
                 //3.3V system with 10-bit ADC
                 const voltageLM35 = (raw * 3.3) / 1023
-                celsius = (voltageLM35 - 0.5) * 100
+                celsius = (voltageLM35) * 100
                 break
             case TempSensor.KS0033:
-                //KS0033
+                //KS0033: NTC thermistor with 10k resistor
                 //3.3V system with 10-bit ADC
-                const voltageKS0035 = (raw * 3.3) / 1023
-                const resistance = (3.3 - voltageKS0035) * 4700 / voltageKS0035
-                const kelvin = 1 / (Math.log(resistance/ 10000)) / 3950 + ( 1 / 298.15) //no clue why this is
+                const voltageKS0033 = (raw * 3.3) / 1023
+                const R = 10000 // 10k pull-up
+                const resistance = (voltageKS0033 * R) / (3.3 - voltageKS0033)
+
+                // Steinhart-Hart equation parameters //no clue what this is online told me to do it though
+                const B = 3950
+                const T0 = 298.15 // 25°C in Kelvin
+                const R0 = 10000 // resistance at T0
+
+                const kelvin = 1 / ((1 / T0) + (1 / B) * Math.log(resistance / R0))
                 celsius = kelvin - 273.15
                 break
         }
@@ -56,7 +63,7 @@ namespace NSE {
 
     /** MATH **/
 
-    //% color="#8f2929"
+    
     /**
      * Returns the logarithm of a number with a specified base.
      * Returns NaN if base ≤ 0, base = 1, or number ≤ 0.
@@ -65,6 +72,7 @@ namespace NSE {
      * @param num the number to take the logarithm of
      */
     //% block="log base $base of $num"
+    //% color="#8f2929"
     //% weight=80
     //% group="Math"
     //% inlineInputMode=inline
@@ -82,6 +90,7 @@ namespace NSE {
      */
     //% block="ln $num"
     //% group="Math"
+    //% color="#8f2929"
     //% weight=80
     //% inlineInputMode=inline
     export function ln(num: number): number {
