@@ -12,16 +12,49 @@ namespace NSE {
     //PUBLIC - blocks which get exported and used by students
 
     /**
+     * 2 flavors of tempurture sensor
+     */
+    export enum TempSensor {
+        //% block="LM36"
+        LM36,
+        //% block="KS0033"
+        KS0033
+    }
+
+    /**
      * This should be placed in the start up section
      */
-    //% block="start with number $integer"
+    //% block="get temperture(°F) from $ on pin $pin"
     //% weight=90
     //% group="Sensors"
     //% inlineInputMode=inline
-    export function start(integer: number) {
+    export function getTemp(sensorName: TempSensor, pin: AnalogPin): number {
+        const raw = pins.analogReadPin(pin)
+        let celsius = 0
 
+        switch (sensorName) {
+            case TempSensor.LM36:
+                //LM36: 10mV/°C with 500mV offset at 0°C
+                //3.3V system with 10-bit ADC
+                const voltageLM35 = (raw * 3.3) / 1023
+                celsius = (voltageLM35 - 0.5) * 100
+                break
+            case TempSensor.KS0033:
+                //KS0033
+                //3.3V system with 10-bit ADC
+                const voltageKS0035 = (raw * 3.3) / 1023
+                const resistance = (3.3 - voltageKS0035) * 4700 / voltageKS0035
+                const kelvin = 1 / (Math.log(resistance/ 10000)) / 3950 + ( 1 / 298.15) //no clue why this is
+                celsius = kelvin - 273.15
+                break
+        }
+
+        const farenheit = (celsius * 1.8) + 32
+        return farenheit
 
     }
+
+    /** MATH **/
 
     //% color="#8f2929"
     /**
@@ -36,7 +69,7 @@ namespace NSE {
     //% group="Math"
     //% inlineInputMode=inline
     export function logarithm(base: number, num: number): number {
-        if (base <= 0 || base == 1 || num <= 0) {o0
+        if (base <= 0 || base == 1 || num <= 0) {
             return NaN
         }
         return Math.log(num) / Math.log(base)
