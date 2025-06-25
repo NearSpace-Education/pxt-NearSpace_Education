@@ -65,13 +65,13 @@ namespace NSE {
     /**
      * gets the relative gas levels (%) from the MQ2 gas sensor
      */
-    //% block="get gas (%) on pin $pin"
+    //% block="get gas on pin $pin"
     //% weight=90
     //% group="Sensors"
     //% inlineInputMode=inline
-    export function gasLevel(pin: AnalogPin): number {
+    export function getGas(pin: AnalogPin): number {
         const raw = pins.analogReadPin(pin)
-        const percentange = (raw/1023)
+        const percentange = (raw/1023) * 100
 
         return percentange
     }
@@ -80,16 +80,39 @@ namespace NSE {
     /**
      * gets the relative steam levels (%) from the Ks0203 steam sensor
      */
-    //% block="get steam (%) on pin $pin"
+    //% block="get steam on pin $pin"
     //% weight=90
     //% group="Sensors"
     //% inlineInputMode=inline
     export function getSteam(pin: AnalogPin): number {
         const raw = pins.analogReadPin(pin)
-        const percentange = (raw/1023)
+        const percentange = (raw/1023) * 100
 
         return percentange
     }
+
+    /**
+     * gets the moisture from the Ks0049 keyestudio Soil Humidity Sensor
+     * 0  ~300     dry soil
+     * 300~700     humid soil
+     * 700~950     in water
+     */
+    //% block="get moisture on pin $pin"
+    //% weight=90
+    //% group="Sensors"
+    //% inlineInputMode=inline
+    export function getMoisture(pin: AnalogPin): number {
+            const raw = pins.analogReadPin(pin)
+            const percentange = (raw/1023) * 100
+
+            return percentange
+        }
+            
+
+
+    }
+
+
 
     /**
      * toggle an LED on a given pin
