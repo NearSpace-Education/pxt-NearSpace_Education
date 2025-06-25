@@ -102,14 +102,10 @@ namespace NSE {
     //% group="Sensors"
     //% inlineInputMode=inline
     export function getMoisture(pin: AnalogPin): number {
-            const raw = pins.analogReadPin(pin)
-            const percentange = (raw/1023) * 100
+        const raw = pins.analogReadPin(pin)
+        const percentange = (raw/1023) * 100
 
-            return percentange
-        }
-            
-
-
+        return percentange
     }
 
 
