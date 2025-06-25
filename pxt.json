@@ -1,6 +1,7 @@
 {
     "name": "Near Space Education",
     "description": "this is a extension developed by NSE to give students an easy interface with our curriculum",
+    "version": "0.0.1-dev", 
     "dependencies": {
         "core": "*",
         "radio": "*",
