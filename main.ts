@@ -24,7 +24,7 @@ namespace NSE {
     /**
      * This should be placed in the start up section
      */
-    //% block="get temperture(°F) from $ on pin $pin"
+    //% block="get temperture(°F) from $sensorName on pin $pin"
     //% weight=90
     //% group="Sensors"
     //% inlineInputMode=inline
