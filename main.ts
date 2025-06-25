@@ -44,7 +44,7 @@ namespace NSE {
                 //3.3V system with 10-bit ADC
                 const voltageKS0033 = (raw * 3.3) / 1023
                 const R = 10000 // 10k pull-up
-                const resistance = (voltageKS0033 * R) / (3.3 - voltageKS0033)
+                const resistance = R * ((3.3 - voltageKS0033) / voltageKS0033)
 
                 // Steinhart-Hart equation parameters //no clue what this is online told me to do it though
                 const B = 3950
