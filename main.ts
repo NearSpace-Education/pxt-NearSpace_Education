@@ -44,7 +44,7 @@ namespace NSE {
                 //3.3V system with 10-bit ADC
                 const voltageKS0033 = (raw * 3.3) / 1023
                 const R = 10000 // 10k pull-up
-                const resistance = R * ((3.3 - voltageKS0033) / voltageKS0033)
+                const resistance = ((3.3 - voltageKS0033) * R / voltageKS0033)
 
                 // Steinhart-Hart equation parameters //no clue what this is online told me to do it though
                 const B = 3950
@@ -61,8 +61,51 @@ namespace NSE {
 
     }
 
-    /** MATH **/
 
+    /**
+     * gets the relative gas levels (%) from the MQ2 gas sensor
+     */
+    //% block="get gas (%) on pin $pin"
+    //% weight=90
+    //% group="Sensors"
+    //% inlineInputMode=inline
+    export function gasLevel(pin: AnalogPin): number {
+        const raw = pins.analogReadPin(pin)
+        const percentange = (raw/1023)
+
+        return percentange
+    }
+
+
+    /**
+     * gets the relative steam levels (%) from the Ks0203 steam sensor
+     */
+    //% block="get steam (%) on pin $pin"
+    //% weight=90
+    //% group="Sensors"
+    //% inlineInputMode=inline
+    export function getSteam(pin: AnalogPin): number {
+        const raw = pins.analogReadPin(pin)
+        const percentange = (raw/1023)
+
+        return percentange
+    }
+
+    /**
+     * toggle an LED on a given pin
+     */
+    //% block="toggle led $toggle on pin $pin"
+    //% weight=90
+    //% group="Sensors"
+    //% inlineInputMode=inline
+
+    export function toggleLED(toggle: boolean, pin: DigitalPin) {
+        pins.digitalWritePin(pin, +toggle)
+    }
+
+        
+
+    /** MATH **/
     
     /**
      * Returns the logarithm of a number with a specified base.
