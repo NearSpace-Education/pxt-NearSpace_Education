@@ -36,7 +36,7 @@ namespace NSE {
     //% group="Math"
     //% inlineInputMode=inline
     export function logarithm(base: number, num: number): number {
-        if (base <= 0 || base == 1 || num <= 0) {
+        if (base <= 0 || base == 1 || num <= 0) {o0
             return NaN
         }
         return Math.log(num) / Math.log(base)
